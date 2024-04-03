@@ -6,6 +6,7 @@ from threading import Thread
 from time import time
 from datetime import datetime
 import pyfiglet
+import getmac
 
 open_ports = []
 service_map = {
@@ -57,7 +58,7 @@ def scan_port():
     while True:
         try:
             s = socket.socket()
-            s.settimeout(1)
+            s.settimeout(0.5)
             port = next(ports)
             s.connect((arguments.IP, port))
             open_ports.append((port, detect_service(port)))
@@ -92,7 +93,6 @@ if __name__ == "__main__":
     print("Scanning Target: " + target)
     print("Scanning started at: " + str(datetime.now()))
     print("*" * 100)
-
     arguments = prepare_args()
     ports = prepare_ports(arguments.start, arguments.end)
     start_time = time()
@@ -100,7 +100,8 @@ if __name__ == "__main__":
     end_time = time()
     if arguments.verbose:
         print()
-    print("OPEN PORTS FOUND:")
+print("MAC ADDRESS OF TARGET:", getmac.get_mac_address(ip=target))  # Print MAC address here    
+print("OPEN PORTS FOUND:")
     for port, service in open_ports:
         print(f"Port: {port} - Service: {service}")
         print ("_" * 60)
